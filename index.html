@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BlockForge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Мультяшный сайт под стиль лаунчера: чернильный контур, жёсткие тени, небо и кремовые карточки */
+:root{
+  --ink:#2b2250; --paper:#fff6e3; --sky1:#3fb2ff; --sky2:#bfeaff; --purple:#7a5cff; --yellow:#ffd23c; --green:#3ddc6e; --muted:#6d6494; --white:#fff;
+  --display:'Fredoka','Trebuchet MS',system-ui,sans-serif; --body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sky2);color:var(--ink);font-family:var(--body);font-weight:700;font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(var(--sky1),var(--sky2) 55%,#e9f9ff)}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.08;text-wrap:balance}
+h2{font-size:clamp(30px,4.6vw,46px);color:var(--white);-webkit-text-stroke:0;text-shadow:0 4px 0 var(--ink),3px 0 0 var(--ink),-3px 0 0 var(--ink),0 -3px 0 var(--ink),3px 3px 0 var(--ink),-3px 3px 0 var(--ink),3px -3px 0 var(--ink),-3px -3px 0 var(--ink)}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto}
+section{padding-block:56px}
+.btn{display:inline-flex;align-items:center;gap:10px;font:700 18px var(--display);color:var(--ink);background:var(--white);border:4px solid var(--ink);border-radius:18px;padding:12px 22px;box-shadow:0 6px 0 var(--ink);text-decoration:none;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(2px);box-shadow:0 4px 0 var(--ink)}
+.btn:active{transform:translateY(6px);box-shadow:0 0 0 var(--ink)}
+.btn:focus-visible,.tab:focus-visible,summary:focus-visible{outline:4px solid var(--purple);outline-offset:3px}
+.btn.main{background:var(--purple);color:var(--white)}
+.btn.sun{background:var(--yellow)}
+.btn.off{background:#e8e2f5;color:var(--muted);cursor:default;box-shadow:0 6px 0 #b9b0d6;border-color:#b9b0d6}
+.btn.off:hover{transform:none;box-shadow:0 6px 0 #b9b0d6}
+.btn small{display:block;font:700 12px var(--body);opacity:.8}
+.btn svg{width:26px;height:26px;flex:none}
+
+/* верхняя полоса */
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px;max-width:1120px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font:700 26px var(--display);text-decoration:none}
+.brand img{width:40px;height:40px}
+nav{display:flex;gap:22px;align-items:center}
+nav a{text-decoration:none;font-weight:800}
+nav a:hover{text-decoration:underline;text-decoration-thickness:3px}
+@media(max-width:720px){nav a.hide-s{display:none}}
+
+/* первый экран */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:36px;align-items:center;padding-block:24px 48px}
+.hero h1{font-size:clamp(40px,6.4vw,72px);color:var(--white);text-shadow:0 6px 0 var(--ink),4px 0 0 var(--ink),-4px 0 0 var(--ink),0 -4px 0 var(--ink),4px 4px 0 var(--ink),-4px 4px 0 var(--ink),4px -4px 0 var(--ink),-4px -4px 0 var(--ink)}
+.hero .lead{font-size:20px;margin:26px 0 24px;max-width:30em;background:var(--paper);border:4px solid var(--ink);border-radius:20px;padding:14px 18px;box-shadow:0 6px 0 var(--ink)}
+.dl{display:flex;gap:14px;flex-wrap:wrap}
+.dl .btn{min-width:0}
+.meta{margin-top:18px;font-size:14px;color:var(--ink);background:rgba(255,255,255,.7);display:inline-block;border-radius:12px;padding:6px 12px}
+.shot{border:5px solid var(--ink);border-radius:22px;background:var(--paper);box-shadow:0 10px 0 var(--ink);overflow:hidden}
+.shot img{display:block;width:100%;height:auto}
+.shot .bar{display:flex;gap:7px;align-items:center;padding:9px 14px;background:var(--yellow);border-bottom:4px solid var(--ink)}
+.shot .bar i{width:12px;height:12px;border-radius:50%;background:var(--ink);opacity:.85}
+.shot .bar span{margin-left:8px;font:600 14px var(--display)}
+.hero .shot{transform:rotate(1.2deg)}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero .shot{transform:none}}
+
+/* карточки */
+.card{background:var(--paper);border:4px solid var(--ink);border-radius:24px;box-shadow:0 8px 0 var(--ink);padding:24px}
+.sec-head{text-align:center;margin-bottom:34px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.sec-head p{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:6px 14px;max-width:34em}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.feat h3{font-size:24px;margin:12px 0 6px}
+.feat p{color:var(--muted);font-size:16px}
+.ico{width:54px;height:54px;border:4px solid var(--ink);border-radius:16px;display:grid;place-items:center;box-shadow:0 4px 0 var(--ink)}
+.ico svg{width:30px;height:30px;stroke:var(--ink);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.c1{background:var(--yellow)}.c2{background:#9fe8b4}.c3{background:#ffb3c7}.c4{background:#b7d4ff}.c5{background:#d3c4ff}.c6{background:#ffc98a}
+
+/* вкладки со скриншотами */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+.tab{font:600 17px var(--display);color:var(--ink);background:var(--white);border:4px solid var(--ink);border-radius:99px;padding:8px 18px;box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.tab[aria-selected=true]{background:var(--yellow)}
+.show{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:26px;align-items:center}
+.show .txt h3{font-size:30px;margin-bottom:10px}
+.show .txt p{color:var(--muted)}
+.show ul{margin:14px 0 0;padding-left:22px;color:var(--ink)}
+.show li{margin:6px 0}
+@media(max-width:900px){.show{grid-template-columns:1fr}.show .txt{order:-1}}
+
+/* шаги */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;counter-reset:s}
+@media(max-width:800px){.steps{grid-template-columns:1fr}}
+.step{position:relative;padding-top:44px}
+.step::before{counter-increment:s;content:counter(s);position:absolute;top:-22px;left:22px;width:48px;height:48px;border-radius:50%;background:var(--purple);color:var(--white);border:4px solid var(--ink);display:grid;place-items:center;font:700 24px var(--display);box-shadow:0 4px 0 var(--ink)}
+.step h3{font-size:24px;margin-bottom:6px}
+.step p{color:var(--muted);font-size:16px}
+
+/* цены */
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;max-width:860px;margin:0 auto}
+@media(max-width:700px){.plans{grid-template-columns:1fr}}
+.plan{display:flex;flex-direction:column;gap:12px}
+.plan.pro{background:#fff3b8}
+.plan h3{font-size:30px}
+.price{font:700 54px var(--display);line-height:1}
+.price small{font:700 18px var(--body);color:var(--muted)}
+.plan ul{list-style:none;padding:0;margin:4px 0 8px;display:flex;flex-direction:column;gap:8px;flex:1}
+.plan li{display:flex;gap:10px;align-items:flex-start}
+.plan li::before{content:"";flex:none;width:22px;height:22px;margin-top:2px;border-radius:50%;border:3px solid var(--ink);background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232b2250' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/80% no-repeat}
+.plan li.soon::before{background-color:#e8e2f5}
+.tag{align-self:flex-start;font:600 14px var(--display);background:var(--ink);color:var(--white);border-radius:99px;padding:3px 12px}
+
+/* FAQ */
+.faq{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+details{background:var(--paper);border:4px solid var(--ink);border-radius:18px;box-shadow:0 5px 0 var(--ink);padding:0}
+summary{cursor:pointer;list-style:none;font:600 20px var(--display);padding:14px 20px;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:28px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{padding:0 20px 18px;color:var(--muted)}
+
+.cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px}
+.cta .dl{justify-content:center}
+footer{max-width:1120px;margin:0 auto;padding-block:30px 40px;font-size:14px;color:var(--ink);text-align:center}
+footer p{background:rgba(255,255,255,.7);border-radius:12px;padding:8px 14px;display:inline-block;max-width:46em}
+.note{display:none;margin-top:14px;background:var(--paper);border:4px solid var(--ink);border-radius:16px;padding:10px 14px;max-width:34em;font-size:15px}
+.note.on{display:block}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="#top"><img src="img/logo.svg" alt="">BlockForge</a>
+  <nav><a class="hide-s" href="#features">Возможности</a><a class="hide-s" href="#look">Как выглядит</a><a class="hide-s" href="#price">Цена</a><a href="#faq">Вопросы</a></nav>
+</header>
+
+<main id="top">
+<div class="wrap">
+<section class="hero">
+  <div>
+    <h1>Лаунчер Minecraft, в котором всё уже есть</h1>
+    <p class="lead">Моды, скины, друзья, чат и свой сервер в одном окне. Запускается быстро, а когда открывается игра, лаунчер сам уходит с дороги.</p>
+    <div class="dl">
+      <a class="btn main" href="#download" data-os="win"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l8-1.1v7.1H3zm9 -1.2L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zm9 0h9V21l-9-1.3z"/></svg><span>Скачать для Windows<small>Windows 10 и 11</small></span></a>
+      <a class="btn sun" href="#download" data-os="mac"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.600-2.800-1.800-3.400-1.800-1.400-.1-2.800.9-3.500.9s-1.800-.8-3-.8c-1.500 0-3 .9-3.800 2.300-1.600 2.800-.4 7 1.200 9.300.8 1.100 1.700 2.400 2.900 2.300 1.200 0 1.600-.7 3-.7s1.800.7 3 .7 2-1.100 2.800-2.200c.9-1.300 1.200-2.500 1.300-2.600-.1 0-2.500-1-2.500-3.900zM14.200 5.800c.6-.8 1.100-1.900.9-3-.9 0-2.100.6-2.700 1.400-.6.700-1.100 1.800-1 2.900 1 .1 2.100-.5 2.800-1.300z"/></svg><span>Скачать для Mac<small>macOS 11 и новее</small></span></a>
+    </div>
+    <div class="note" id="note">Ссылки на скачивание появятся сразу после первого релиза. Загляни сюда ещё раз.</div>
+    <p class="meta">Бесплатно. Нужна лицензия Minecraft для игры по сети, офлайн-режим работает без неё.</p>
+  </div>
+  <div class="shot"><div class="bar"><i></i><i></i><i></i><span>BlockForge</span></div><img src="img/home.jpg" alt="Главный экран лаунчера BlockForge" width="1650" height="1050"></div>
+</section>
+</div>
+
+<div class="wrap" id="features"><section>
+  <div class="sec-head"><h2>Всё нужное под рукой</h2><p>Меню короткое, чтобы новичок не потерялся: шесть вкладок и ничего лишнего.</p></div>
+  <div class="grid">
+    <div class="card feat"><div class="ico c1"><svg viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg></div><h3>Быстрый старт</h3><p>Игра подготавливается параллельно, повторный запуск идёт по быстрому пути. Окно лаунчера скрывается, когда открывается Minecraft, и возвращается после выхода.</p></div>
+    <div class="card feat"><div class="ico c2"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.500v9L12 21l-8-4.500v-9z"/><path d="M4 7.500l8 4.500 8-4.500M12 12v9"/></svg></div><h3>Моды и сборки</h3><p>Fabric, Quilt, Forge и NeoForge в один клик. Каталог Modrinth встроен: моды, ресурспаки и шейдеры ставятся прямо из лаунчера.</p></div>
+    <div class="card feat"><div class="ico c3"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg></div><h3>Скины в один клик</h3><p>12 готовых скинов, редактор пикселей и загрузка своего PNG. Скачал скин в интернете, перетащил в окно, и он надет.</p></div>
+    <div class="card feat"><div class="ico c4"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.500"/><path d="M3 20c0-3.500 2.700-6 6-6s6 2.500 6 6"/><circle cx="17" cy="9" r="2.500"/><path d="M17 14c2.500 0 4 2 4 5"/></svg></div><h3>Друзья по ID</h3><p>У каждого игрока свой 8-значный ID, как в мессенджерах. Введи ID друга, добавь его и увидишь, кто в сети и во что играет.</p></div>
+    <div class="card feat"><div class="ico c5"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></div><h3>Чаты и приглашения</h3><p>Общий чат всех игроков и личные переписки. Одним нажатием зови друга на свой сервер: ему придёт приглашение с адресом.</p></div>
+    <div class="card feat"><div class="ico c6"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg></div><h3>Свой сервер</h3><p>Выживание, анархия или мини-игры: лаунчер скачает сервер, запустит его и поставит плагины из каталога Modrinth.</p></div>
+  </div>
+</section></div>
+
+<div class="wrap" id="look"><section>
+  <div class="sec-head"><h2>Как это выглядит</h2><p>Настоящие экраны лаунчера. Интерфейс можно переключить на другой язык целиком.</p></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="show"><div class="shot"><div class="bar"><i></i><i></i><i></i><span id="shotTitle">BlockForge</span></div><img id="shotImg" src="img/play.jpg" alt="" width="1650" height="1050"></div>
+  <div class="txt card" id="shotTxt"></div></div>
+</section></div>
+
+<div class="wrap"><section>
+  <div class="sec-head"><h2>Три шага до игры</h2></div>
+  <div class="steps">
+    <div class="card step"><h3>Скачай и открой</h3><p>Установщик для Windows или образ для Mac. Больше ничего ставить не нужно: Java лаунчер возьмёт сам.</p></div>
+    <div class="card step"><h3>Создай аккаунт</h3><p>Придумай ник и пароль, как в привычных лаунчерах. Можно войти через Microsoft или играть без аккаунта.</p></div>
+    <div class="card step"><h3>Нажми «Играть»</h3><p>Выбери версию или готовую сборку и жми. Скачивание и запуск лаунчер берёт на себя.</p></div>
+  </div>
+</section></div>
+
+<div class="wrap" id="price"><section>
+  <div class="sec-head"><h2>Цена</h2><p>Всё главное бесплатно. Подписка нужна тем, кто хочет поддержать проект.</p></div>
+  <div class="plans">
+    <div class="card plan"><h3>Бесплатный</h3><div class="price">0 ₽</div>
+      <ul><li>Запуск любых версий Minecraft</li><li>Моды, ресурспаки и шейдеры</li><li>Скины, редактор и загрузка PNG</li><li>Друзья, чаты и приглашения</li><li>Свой сервер и плагины</li></ul>
+      <a class="btn main" href="#download" data-os="auto">Скачать бесплатно</a></div>
+    <div class="card plan pro"><span class="tag">Скоро</span><h3>Премиум</h3><div class="price">$1 <small>в месяц</small></div>
+      <ul><li class="soon">Особые значки и рамки в чате</li><li class="soon">Облачное хранилище скинов</li><li class="soon">Расширенная библиотека готовых скинов</li><li class="soon">Приоритетная поддержка</li></ul>
+      <span class="btn off" aria-disabled="true">Оплата откроется позже</span></div>
+  </div>
+</section></div>
+
+<div class="wrap" id="faq"><section>
+  <div class="sec-head"><h2>Вопросы</h2></div>
+  <div class="faq">
+    <details><summary>Нужна ли лицензия Minecraft?</summary><p>Для игры на серверах с проверкой лицензии нужна. Входи через Microsoft. Офлайн-режим работает без лицензии на локальных серверах и серверах без проверки.</p></details>
+    <details><summary>Windows пишет, что приложение неизвестно. Это вирус?</summary><p>Нет. Пока у приложения нет платной цифровой подписи, Windows (SmartScreen) и macOS (Gatekeeper) показывают предупреждение. Нажми «Подробнее» и «Выполнить в любом случае», на Mac открой приложение через правый клик и «Открыть».</p></details>
+    <details><summary>Друзья и чаты работают без аккаунта?</summary><p>Нет. Они доступны с аккаунтом BlockForge или после входа через Microsoft. Остальное работает и без аккаунта.</p></details>
+    <details><summary>Увидят ли другие мой скин?</summary><p>В офлайн-режиме скин виден только тебе. Чтобы его видели остальные, зайди с аккаунтом Microsoft: скин загрузится в профиль Minecraft.</p></details>
+    <details><summary>Что с моими данными?</summary><p>Пароль хранится на сервере только в виде хеша, а сессия на твоём компьютере зашифрована. Мы не просим ничего, кроме ника и пароля.</p></details>
+    <details><summary>Это официальный лаунчер Mojang?</summary><p>Нет. BlockForge сделан независимо и не связан с Mojang и Microsoft.</p></details>
+  </div>
+</section></div>
+
+<div class="wrap"><section class="cta" id="download">
+  <h2>Готов играть?</h2>
+  <div class="dl"><a class="btn main" href="#download" data-os="win"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l8-1.1v7.1H3zm9-1.2L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zm9 0h9V21l-9-1.3z"/></svg><span>Windows</span></a><a class="btn sun" href="#download" data-os="mac"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.8 2.300-1.600 2.800-.4 7 1.200 9.300.8 1.100 1.700 2.400 2.900 2.300 1.200 0 1.600-.7 3-.7s1.800.7 3 .7 2-1.100 2.800-2.200c.9-1.300 1.200-2.500 1.300-2.600-.1 0-2.500-1-2.500-3.900z"/></svg><span>macOS</span></a></div>
+  <div class="note" id="note2">Ссылки на скачивание появятся сразу после первого релиза.</div>
+</section></div>
+</main>
+<footer><p>BlockForge не является официальным продуктом Mojang Studios или Microsoft. Minecraft — товарный знак Mojang Studios.</p></footer>
+
+<script>
+// Сюда вставь прямые ссылки на файлы релиза, когда они появятся (например, из GitHub Releases).
+var DOWNLOADS = { win: "", mac: "" };
+
+var SHOTS = [
+  { id: "play", tab: "Играть", img: "img/play.jpg", t: "Играть", h: "Выбрал версию и поехали", p: "Главная кнопка одна. Рядом видно версию, загрузчик, память и твой скин.", li: ["Готовые сборки и свои профили", "Память и Java настраиваются в настройках", "Лаунчер прячется, когда открылась игра"] },
+  { id: "mods", tab: "Моды", img: "img/mods.jpg", t: "Моды", h: "Каталог Modrinth внутри", p: "Ищи моды, ресурспаки и шейдеры и ставь одним нажатием. Лаунчер подберёт файл под твою версию.", li: ["Fabric, Quilt, Forge, NeoForge", "Свои файлы можно добавить вручную", "Моды лежат отдельно в каждой сборке"] },
+  { id: "skins", tab: "Скины", img: "img/skins.jpg", t: "Скины", h: "Надел за секунду", p: "Выбери один из готовых скинов, нарисуй свой в редакторе или перетащи скачанный PNG в окно.", li: ["12 готовых скинов", "Редактор пикселей и библиотека", "Подходят файлы 64×64 и 64×32"] },
+  { id: "friends", tab: "Друзья", img: "img/friends.jpg", t: "Друзья", h: "Добавь друга по ID", p: "Твой ID лежит на главной вкладке друзей. Отправь его другу или введи ID друга и нажми «Добавить».", li: ["Видно, кто в сети и во что играет", "Заявки в друзья принимаются здесь же", "Приглашение на сервер одним нажатием"] },
+  { id: "chat", tab: "Чаты", img: "img/chat.jpg", t: "Чаты", h: "Общий чат и личные", p: "Пиши всем игрокам BlockForge или только другу. Приглашение на сервер приходит прямо в чат.", li: ["Общий чат и личные переписки", "Счётчик непрочитанных", "Кнопка «Присоединиться» в приглашении"] },
+  { id: "myserver", tab: "Свой сервер", img: "img/myserver.jpg", t: "Свой сервер", h: "Сервер за пару кликов", p: "Выбери режим, прими условия Mojang и нажми «Установить и запустить». Сервер подскажет адрес для друзей.", li: ["Выживание, анархия, мини-игры", "Плагины из каталога Modrinth", "Консоль и папка сервера под рукой"] }
+];
+var tabs = document.getElementById('tabs'), img = document.getElementById('shotImg'), txt = document.getElementById('shotTxt'), ttl = document.getElementById('shotTitle');
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function pick(i){
+  var s = SHOTS[i];
+  img.src = s.img; img.alt = 'Экран «' + s.t + '» в лаунчере BlockForge'; ttl.textContent = 'BlockForge · ' + s.t;
+  txt.innerHTML = '<h3>' + esc(s.h) + '</h3><p>' + esc(s.p) + '</p><ul>' + s.li.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+  Array.prototype.forEach.call(tabs.children, function(b, j){ b.setAttribute('aria-selected', j === i ? 'true' : 'false'); });
+}
+SHOTS.forEach(function(s, i){
+  var b = document.createElement('button'); b.className = 'tab'; b.type = 'button'; b.setAttribute('role', 'tab'); b.textContent = s.tab;
+  b.addEventListener('click', function(){ pick(i); }); tabs.appendChild(b);
+});
+pick(0);
+
+// кнопки скачивания
+var ua = navigator.userAgent || '';
+var mine = /Mac/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'mac' : 'win';
+document.querySelectorAll('[data-os]').forEach(function(a){
+  var os = a.getAttribute('data-os'); if (os === 'auto') os = mine;
+  a.addEventListener('click', function(e){
+    var url = DOWNLOADS[os];
+    if (url) { a.href = url; return; }
+    e.preventDefault();
+    var n = document.getElementById(a.closest('#download') ? 'note2' : 'note'); n.classList.add('on');
+  });
+});
+</script>
+
+</body>
+</html>
