@@ -117,6 +117,13 @@ details p{padding:0 20px 18px;color:var(--muted)}
 .cta .dl{justify-content:center}
 footer{max-width:1120px;margin:0 auto;padding-block:30px 40px;font-size:14px;color:var(--ink);text-align:center}
 footer p{background:rgba(255,255,255,.7);border-radius:12px;padding:8px 14px;display:inline-block;max-width:46em}
+.dlgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media(max-width:900px){.dlgrid{grid-template-columns:1fr}}
+.dlc{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.dlc h3{font-size:26px}.dlc p{color:var(--muted);font-size:16px;flex:1}
+.dlc.off{opacity:.85}
+.reqs{max-width:46em;margin:22px auto 0;text-align:center;font-size:14px;background:rgba(255,255,255,.75);border-radius:14px;padding:10px 14px}
+#note2,#note3{margin-inline:auto}
 .note{display:none;margin-top:14px;background:var(--paper);border:4px solid var(--ink);border-radius:16px;padding:10px 14px;max-width:34em;font-size:15px}
 .note.on{display:block}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -126,7 +133,7 @@ footer p{background:rgba(255,255,255,.7);border-radius:12px;padding:8px 14px;dis
 
 <header>
   <a class="brand" href="#top"><img src="img/logo.svg" alt="">BlockForge</a>
-  <nav><a class="hide-s" href="#features">Возможности</a><a class="hide-s" href="#look">Как выглядит</a><a class="hide-s" href="#price">Цена</a><a href="#faq">Вопросы</a></nav>
+  <nav><a class="hide-s" href="#features">Возможности</a><a class="hide-s" href="#look">Как выглядит</a><a class="hide-s" href="#price">Цена</a><a href="#download">Скачать</a><a href="#faq">Вопросы</a></nav>
 </header>
 
 <main id="top">
@@ -136,10 +143,10 @@ footer p{background:rgba(255,255,255,.7);border-radius:12px;padding:8px 14px;dis
     <h1>Лаунчер Minecraft, в котором всё уже есть</h1>
     <p class="lead">Моды, скины, друзья, чат и свой сервер в одном окне. Запускается быстро, а когда открывается игра, лаунчер сам уходит с дороги.</p>
     <div class="dl">
-      <a class="btn main" href="#download" data-os="win"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l8-1.1v7.1H3zm9 -1.2L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zm9 0h9V21l-9-1.3z"/></svg><span>Скачать для Windows<small>Windows 10 и 11</small></span></a>
-      <span class="btn off" aria-disabled="true"><span>Mac: скоро<small>версия в разработке</small></span></span>
+      <a class="btn main" href="#download" data-dl="setup"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l8-1.1v7.1H3zm9-1.2L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zm9 0h9V21l-9-1.3z"/></svg><span>Скачать для Windows<small id="heroSub">Установщик, Windows 10 и 11</small></span></a>
+      <a class="btn sun" href="#download" data-dl="portable"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Без установки<small>Портативная версия</small></span></a>
     </div>
-    <div class="note" id="note">Ссылки на скачивание появятся сразу после первого релиза. Загляни сюда ещё раз.</div>
+    <div class="note" id="note" role="status"></div>
     <p class="meta">Играть бесплатно. Моды, скины, друзья и свой сервер в Премиуме за $1 в месяц.</p>
   </div>
   <div class="shot"><div class="bar"><i></i><i></i><i></i><span>BlockForge</span></div><img src="img/home.jpg" alt="Главный экран лаунчера BlockForge" width="1650" height="1050"></div>
@@ -179,10 +186,11 @@ footer p{background:rgba(255,255,255,.7);border-radius:12px;padding:8px 14px;dis
   <div class="plans">
     <div class="card plan"><h3>Бесплатный</h3><div class="price">0 ₽</div>
       <ul><li>Запуск любой версии Minecraft</li><li>Вход через Microsoft или офлайн</li><li>Java подбирается и скачивается сама</li><li>Одна сборка и быстрый старт</li></ul>
-      <a class="btn main" href="#download" data-os="auto">Скачать бесплатно</a></div>
+      <a class="btn main" href="#download" data-dl="setup">Скачать бесплатно</a></div>
     <div class="card plan pro"><span class="tag">Всё остальное</span><h3>Премиум</h3><div class="price">$1 <small>в месяц</small></div>
       <ul><li>Моды, Fabric, Forge, Quilt, NeoForge и Modrinth</li><li>Скины: галерея, редактор, загрузка PNG</li><li>Друзья, чаты и приглашения играть</li><li>Свой сервер: выживание, анархия, мини-игры</li><li>Любое число сборок и смена языка</li></ul>
-      <span class="btn off" aria-disabled="true">Оплата откроется позже</span></div>
+      <a class="btn main" href="#price" data-buy><span>Купить в Telegram<small>оплата Telegram Stars</small></span></a>
+      <div class="note" id="note3" role="status"></div></div>
   </div>
 </section></div>
 
@@ -191,24 +199,33 @@ footer p{background:rgba(255,255,255,.7);border-radius:12px;padding:8px 14px;dis
   <div class="faq">
     <details><summary>Нужна ли лицензия Minecraft?</summary><p>Для игры на серверах с проверкой лицензии нужна. Входи через Microsoft. Офлайн-режим работает без лицензии на локальных серверах и серверах без проверки.</p></details>
     <details><summary>Windows пишет, что приложение неизвестно. Это вирус?</summary><p>Нет. Пока у приложения нет платной цифровой подписи, Windows (SmartScreen) и macOS (Gatekeeper) показывают предупреждение. Нажми «Подробнее» и «Выполнить в любом случае», на Mac открой приложение через правый клик и «Открыть».</p></details>
-    <details><summary>Что входит в Премиум и как его купить?</summary><p>Моды и загрузчики, скины, друзья и чаты, свой сервер, много сборок и язык интерфейса. Покупаешь в лаунчере, получаешь код и вводишь его в настройках. Премиум привязан к аккаунту BlockForge.</p></details>
+    <details><summary>Что входит в Премиум и как его купить?</summary><p>Моды и загрузчики, скины, друзья и чаты, свой сервер, много сборок и язык интерфейса. Покупаешь в Telegram-боте за Telegram Stars: присылаешь боту свой ID из лаунчера (он виден слева внизу), оплачиваешь, и Премиум включается сам. Можно оформить подписку с автопродлением или оплатить один раз.</p></details>
     <details><summary>Увидят ли другие мой скин?</summary><p>В офлайн-режиме скин виден только тебе. Чтобы его видели остальные, зайди с аккаунтом Microsoft: скин загрузится в профиль Minecraft.</p></details>
     <details><summary>Что с моими данными?</summary><p>Пароль хранится на сервере только в виде хеша, а сессия на твоём компьютере зашифрована. Мы не просим ничего, кроме ника и пароля.</p></details>
     <details><summary>Это официальный лаунчер Mojang?</summary><p>Нет. BlockForge сделан независимо и не связан с Mojang и Microsoft.</p></details>
   </div>
 </section></div>
 
-<div class="wrap"><section class="cta" id="download">
-  <h2>Готов играть?</h2>
-  <div class="dl"><a class="btn main" href="#download" data-os="win"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l8-1.1v7.1H3zm9-1.2L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zm9 0h9V21l-9-1.3z"/></svg><span>Windows</span></a><span class="btn off" aria-disabled="true"><span>Mac: скоро<small>версия в разработке</small></span></span></div>
-  <div class="note" id="note2">Ссылки на скачивание появятся сразу после первого релиза.</div>
+<div class="wrap" id="download"><section>
+  <div class="sec-head"><h2>Скачать BlockForge</h2><p id="dlVer">Всегда последняя версия: свежие версии Minecraft и Java лаунчер скачивает сам.</p></div>
+  <div class="dlgrid">
+    <div class="card dlc"><div class="ico c1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5l8-1.1v7.1H3zm9-1.2L21 3v8.5h-9zM3 12.5h8v7.1l-8-1.1zm9 0h9V21l-9-1.3z"/></svg></div><h3>Полное приложение</h3>
+      <p>Установщик для Windows. Создаёт ярлык, обновляется поверх и сам скачивает всё нужное для игры: версии Minecraft, Java, библиотеки.</p>
+      <a class="btn main" href="#download" data-dl="setup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Скачать установщик<small class="sz" data-sz="setup">Windows 10 и 11</small></span></a></div>
+    <div class="card dlc"><div class="ico c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg></div><h3>Без установки</h3>
+      <p>Один файл, который запускается двойным щелчком из любой папки или с флешки. Те же возможности, ничего не устанавливается.</p>
+      <a class="btn sun" href="#download" data-dl="portable"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Скачать портативную<small class="sz" data-sz="portable">Windows 10 и 11</small></span></a></div>
+    <div class="card dlc off"><div class="ico c5"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div><h3>Mac</h3>
+      <p>Версия для macOS в разработке. Пока лаунчер работает только на Windows.</p>
+      <span class="btn off" aria-disabled="true">Скоро</span></div>
+  </div>
+  <div class="note" id="note2" role="status"></div>
+  <p class="reqs">Требования: Windows 10 или 11 (64 бит), 4 ГБ памяти и 2 ГБ свободного места на диске. Windows может показать предупреждение «неизвестный издатель»: нажми «Подробнее» и «Выполнить в любом случае». Подробности в разделе «Вопросы».</p>
 </section></div>
 </main>
 <footer><p>BlockForge не является официальным продуктом Mojang Studios или Microsoft. Minecraft — товарный знак Mojang Studios.</p></footer>
 
 <script>
-// Сюда вставь прямые ссылки на файлы релиза, когда они появятся (например, из GitHub Releases).
-var DOWNLOADS = { win: "", mac: "" };
 
 var SHOTS = [
   { id: "play", tab: "Играть", img: "img/play.jpg", t: "Играть", h: "Выбрал версию и поехали", p: "Главная кнопка одна. Рядом видно версию, загрузчик, память и твой скин.", li: ["Готовые сборки и свои профили", "Память и Java настраиваются в настройках", "Лаунчер прячется, когда открылась игра"] },
@@ -232,18 +249,39 @@ SHOTS.forEach(function(s, i){
 });
 pick(0);
 
-// кнопки скачивания
-var ua = navigator.userAgent || '';
-var mine = /Mac/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'mac' : 'win';
-document.querySelectorAll('[data-os]').forEach(function(a){
-  var os = a.getAttribute('data-os'); if (os === 'auto') os = mine;
+// Выпуск берётся с GitHub: ссылки всегда ведут на актуальные файлы, мёртвых ссылок не бывает.
+var REPO = "a23-aa/blockforge";       // репозиторий, где лежат релизы
+var BOT_URL = "";                     // ссылка на Telegram-бота, например https://t.me/blockforge_premium_bot
+var DL = { setup: null, portable: null };
+function say(id, text){ var n = document.getElementById(id); if (!n) return; n.textContent = text; n.classList.add('on'); }
+function mb(x){ return (x / 1048576).toFixed(0) + ' МБ'; }
+document.querySelectorAll('[data-dl]').forEach(function(a){
   a.addEventListener('click', function(e){
-    var url = DOWNLOADS[os];
-    if (url) { a.href = url; return; }
+    var f = DL[a.getAttribute('data-dl')];
+    if (f) return; // обычная ссылка на файл
     e.preventDefault();
-    var n = document.getElementById(a.closest('#download') ? 'note2' : 'note'); n.classList.add('on');
+    say(a.closest('#download') ? 'note2' : 'note', 'Первая версия ещё не выложена. Загляни сюда позже или напиши нам.');
   });
 });
+document.querySelectorAll('[data-buy]').forEach(function(a){
+  if (BOT_URL) { a.href = BOT_URL; a.target = '_blank'; a.rel = 'noopener'; return; }
+  a.addEventListener('click', function(e){ e.preventDefault(); say('note3', 'Бот для покупки скоро откроется.'); });
+});
+try {
+  fetch('https://api.github.com/repos/' + REPO + '/releases/latest', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function(r){ if (!r.ok) throw new Error('нет релиза'); return r.json(); })
+    .then(function(rel){
+      (rel.assets || []).forEach(function(x){
+        var k = /portable/i.test(x.name) ? 'portable' : /setup/i.test(x.name) ? 'setup' : null;
+        if (k && /\.exe$/i.test(x.name)) DL[k] = x;
+      });
+      document.querySelectorAll('[data-dl]').forEach(function(a){
+        var f = DL[a.getAttribute('data-dl')]; if (f) { a.href = f.browser_download_url; a.removeAttribute('target'); }
+      });
+      document.querySelectorAll('.sz').forEach(function(s){ var f = DL[s.getAttribute('data-sz')]; if (f) s.textContent = 'Windows, ' + mb(f.size); });
+      if (rel.tag_name) document.getElementById('dlVer').textContent = 'Последняя версия: ' + rel.tag_name + '. Свежие версии Minecraft и Java лаунчер скачивает сам.';
+    }).catch(function(){});
+} catch (e) {}
 </script>
 
 </body>
