@@ -1,0 +1,45 @@
+name: Собрать BlockForge для Windows
+
+# Запуск: вкладка Actions → «Собрать BlockForge для Windows» → Run workflow → впиши версию, например v1.0.0
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Версия выпуска (например v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Установить зависимости
+        run: npm install
+      - name: Собрать установщик и портативную версию
+        run: npx electron-builder --win nsis portable --publish never
+      - name: Проверить, что файлы собрались
+        shell: bash
+        run: ls -la dist && test -f dist/BlockForge-Setup.exe && test -f dist/BlockForge-Portable.exe
+      - name: Опубликовать выпуск
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.inputs.version || github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/BlockForge-Setup.exe dist/BlockForge-Portable.exe --clobber
+          else
+            gh release create "$TAG" dist/BlockForge-Setup.exe dist/BlockForge-Portable.exe --title "BlockForge $TAG" --notes "Установщик для Windows и портативная версия."
+          fi
